@@ -8,7 +8,7 @@ excerpt: TODO
 
 From your application, you can decorate the tests that ship with Workarea,
 and you can write your own application tests.
-See [Testing Overview, Tests & Decorators](/articles/testing-overview.html#tests-amp-decorators)
+See [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-amp-decorators)
 for more info, including an explanation of when to decorate vs when to write your own.
 
 This doc explains how to
@@ -31,7 +31,7 @@ When doing so, the following recipes may also be useful:
 [Decorate](/articles/decoration.html) a test case just like any other ruby class, except the pathname of the decorator must match the pathname of the original file
 except for the file extension
 
-[Testing Overview, Test Case Types & Mixins](/articles/testing-overview.html#test-case-types-amp-mixins)
+[Testing Concepts, Test Case Types & Mixins](/articles/testing-concepts.html#test-case-types-amp-mixins)
 
 e.g., to decorate the class definition:
 
@@ -106,7 +106,7 @@ end
 ## Write an Application Test Case
 
 Prefer new tests over decorators.
-When to decorate a test, see [Testing Overview, Tests & Decorators](/articles/testing-overview.html#tests-amp-decorators)
+When to decorate a test, see [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-amp-decorators)
 
 To create a test, create a new ruby file to represent the test case.
 Choose a pathname based on workarea conventions.
@@ -122,7 +122,7 @@ define a class
 inherit from the appropriate test case type
 mix in additional test support
 
-[Test Case Types & Mixins](/articles/testing-overview.html#test-case-types-amp-mixins)
+[Test Case Types & Mixins](/articles/testing-concepts.html#test-case-types-amp-mixins)
 
 Example. Ideally replace this with a better one:
 

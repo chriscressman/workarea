@@ -10,7 +10,7 @@ developing-on-workarea:
   navigating-the-code.html.md: /articles/navigating-the-code.html.md
   seeds.html.md: /articles/seeds.html.md
   testing:
-    testing-overview.html.md: /articles/testing-overview.html.md
+    testing-concepts.html.md: /articles/testing-concepts.html.md
     run-tests.html.md: /articles/run-tests.html.md
     decorate-and-write-tests.html.md: /articles/decorate-and-write-tests.html.md
     configure-and-add-test-factories.html.md: /articles/configure-and-add-test-factories.html.md

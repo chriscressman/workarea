@@ -9,10 +9,10 @@ excerpt: TODO
 The platform ships with its own tests (Workarea tests), which you can run from your application.
 When you run the platform tests, any decorators you've written for those tests are applied.
 And you can also write your own tests (application tests) that further extend the platform.
-See also [Testing Overview, Tests & Decorators](/articles/testing-overview.html#tests-decorators)
+See also [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-decorators)
 
 You run the tests using one of many test runners.
-See also [Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+See also [Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 
 It can be confusing which to use for a given situation, so this document provides instructions to:
 
@@ -31,7 +31,7 @@ In those situations you may want to refer to:
 ## Run All Tests
 
 Uses a workarea test runner.
-[Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 Runs the workarea platform tests.
 With any decorators you've written applied.
 Any any new tests original to your application.
@@ -41,7 +41,7 @@ bin/rails workarea:test
 ```
 
 Under the hood, this uses the rails test runner.
-[Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 Passes paths of `/test/**/*_test.rb` within the installed
 Workarea Core and each installed plugin
 And rails root
@@ -52,7 +52,7 @@ And rails root
 ## Run Workarea Tests
 
 Uses a workarea test runner.
-[Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 Run only Workarea platform tests.
 Any decorators for these tests are applied.
 
@@ -83,7 +83,7 @@ bin/rails workarea::test:plugins
 ### Run Specific Workarea Tests
 
 Uses the rails test runner.
-[Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 Use the Rails test runner to run individual/specific Workarea tests.
 
 Pass the pathnames of the workarea test files.
@@ -109,7 +109,7 @@ bin/rails test $(bundle show workarea-core)/test/models/workarea/user_test.rb -n
 To run _all_ the tests, you've decorated from your application,
 use the following command.
 Uses a workarea test runner.
-[Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 finds the originals that correspond to your application decorators
 within core and installed plugins and runs them.
 
@@ -130,7 +130,7 @@ pass pathnames ending in `.rb`, not `.decorator`
 
 Nothing Workarea-specific about this.
 Use the standard Rails test runner like you would in any other Rails app.
-[Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 
 ```
 bin/rails test
@@ -149,7 +149,7 @@ bin/rails test:system
 
 Again, nothing Workarea specific.
 Use the standard Rails test runner, and pass it pathnames as arguments.
-[Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 
 ```
 bin/rails test <paths>
@@ -178,7 +178,7 @@ Refer to [Run Decorated Workarea Tests](#run-decorated-workarea-tests)
 Once you are familiar with the commands from the sections above, you may simply need a refesher of which
 test runners exist.
 List all available test runners, including rails and workarea.
-[Testing Overview, Test Runners](/articles/testing-overview.html#test-runners)
+[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
 
 ```
 bin/rails -T test
