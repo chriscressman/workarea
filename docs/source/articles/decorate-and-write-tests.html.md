@@ -21,7 +21,6 @@ And also how to
 
 When doing so, the following recipes may also be useful:
 
-* [Conditionally Define a Test](#conditionally-define-a-test)
 * [Change Configuration within a Test](#change-configuration-within-a-test)
 * [Change Locale within a Test](#change-locale-within-a-test)
 * [Change Time within a Test](#change-time-within-a-test)
@@ -34,85 +33,63 @@ except for the file extension
 
 [Testing Overview, Test Case Types & Mixins](/articles/testing-overview.html#test-case-types-amp-mixins)
 
-```
-https://github.com/workarea-commerce/workarea/blob/master/core/test/models/workarea/payment/credit_card_integration_test.rb
-https://github.com/workarea-commerce/workarea-braintree/blob/master/test/models/workarea/payment/credit_card_integration_test.decorator
-```
+e.g., to decorate the class definition:
 
 ```
 workarea-core/test/models/workarea/payment/credit_card_integration_test.rb
+```
+
+create the decorator:
+
+```
 workarea-braintree/test/models/workarea/payment/credit_card_integration_test.decorator
 ```
 
-This is necessary for the decorator to be applied to the class.
+This is necessary for the decorator to be applied to the class when tests are run.
 
 
 ### Skip a Workarea Test
 
-Special case of decorating a test that is useful and overlooked.
+One reason to decorate a test case is to skip one or more tests.
+Makes sense to skip a test when your extensions make it irrelevant or not applicable.
+e.g. you remove the ability to manage addresses in workarea as part of an
+integration with a user management system
+or temporarily removed it until while working on a related feature
+that will affect it
+or skip because there is a platform bug and you're waiting for patch
+
+Skip all tests within a test case:
 
 ```
-# board-game-supercenter/test/system/workarea/storefront/users/hearts_system_test.decorator
+# <your_application>/test/system/workarea/storefront/addresses_system_test.decorator
 
 require 'test_helper'
 
 module Workarea
-  decorate Storefront::Users::HeartsSystemTest do
-    # skip all tests in this test case
+  decorate Storefront::AddressesSystemTest do
     decorated { setup :skip }
   end
 end
+```
 
-# board-game-supercenter/test/system/workarea/admin/inventory_skus_system_test.decorator
+Skip specific tests within a test case:
 
-require 'test_helper'
-
-module Workarea
-  decorate Admin::InventorySkusSystemTest do
-    def test_editing_a_non_existent_sku
-      skip('removed this feature')
-    end
-  end
-end
-
-# board-game-supercenter/test/system/workarea/admin/publish_authorization_system_test.decorator
+```
+# <your_application>/test/system/workarea/storefront/addresses_system_test.decorator
 
 require 'test_helper'
 
 module Workarea
-  decorate Admin::PublishAuthorizationSystemTest do
-    def test_user_cannot_select_publish_now_in_workflows
-      skip('defer until custom permission is implemented')
-    end
-
-    def test_user_cannot_submit_form_without_selecting_a_release
-      skip('defer until custom permission is implemented')
+  decorate Storefront::AddressesSystemTest do
+    def test_managing_addresses
+      skip('defer until customer user management is implemented')
     end
   end
 end
+```
 
-# board-game-supercenter/test/documentation/workarea/api/storefront/checkouts_documentation_test.decorator
-
-require 'test_helper'
-
-module Workarea
-  decorate Api::Storefront::CheckoutsDocumentationTest do
-    def test_and_document_complete
-      skip('remove until gift card upgrade')
-    end
-    def test_and_document_update
-      skip('remove until gift card upgrade')
-    end
-    def test_and_document_reset
-      skip('remove until gift card upgrade')
-    end
-    def test_and_document_show
-      skip('remove until gift card upgrade')
-    end
-  end
-end
-
-# board-game-supercenter/test/models/workarea/payment/refund/credit_card_test.decorator
+```
+# <your_application>/test/models/workarea/payment/refund/credit_card_test.decorator
 
 require 'test_helper'
 
@@ -136,10 +113,9 @@ Choose a pathname based on workarea conventions.
 Refer to workarea engines to see how tests are grouped.
 But always within `/test`.
 
-```
-https://github.com/workarea-commerce/workarea/tree/master/core/test
-https://github.com/workarea-commerce/workarea/tree/master/storefront/test
-```
+[`/test` directory for Workarea Core](https://github.com/workarea-commerce/workarea/tree/master/core/test)
+
+[`/test` directory for Workarea Storefront](https://github.com/workarea-commerce/workarea/tree/master/storefront/test)
 
 require the test helper
 define a class
@@ -165,144 +141,6 @@ module Workarea
 end
 ```
 
-
-### Conditionally Define a Test
-
-As a plugin author, you can't control the environment in which your plugins' tests are run. It is therefore useful to define some tests only when certain conditions are met, such as another particular plugin being installed or optional code being present in the environment. The following examples demonstrate the concept of conditionally defining tests.
-
-The following examples from Browse Option, Clothing, and Gift Cards demonstrate conditionally defining tests when another plugin is installed.
-
-```
-# workarea-browse_option-1.2.1/test/integration/workarea/api/storefront/browse_option_product_integration_test.rb
-
-require 'test_helper'
-
-module Workarea
-  module Api
-    module Storefront
-      class BrowseOptionProductIntegrationTest < Workarea::IntegrationTest
-        if Plugin.installed?('Workarea::Api::Storefront')
-          setup :product, :category, :index_product
-
-          def product
-            # ...
-          end
-
-          def category
-            # ...
-          end
-
-          def index_product
-            # ...
-          end
-
-          def test_category_show
-            # ...
-          end
-
-          def test_product_show
-            # ...
-          end
-        end
-      end
-    end
-  end
-end
-```
-
-```
-# workarea-clothing-2.1.1/test/integration/workarea/api/storefront/product_swatches_integration_test.rb
-
-require 'test_helper'
-
-module Workarea
-  module Api
-    module Storefront
-      class ProductSwatchesIntegrationTest < Workarea::IntegrationTest
-        if Plugin.installed?('Workarea::Api::Storefront')
-          setup :set_product
-
-          def set_product
-            # ...
-          end
-
-          def test_shows_products
-            # ...
-          end
-        end
-      end
-    end
-  end
-end
-```
-
-```
-# workarea-gift_cards-3.2.0/test/integration/workarea/api/storefront/balance_integration_test.rb
-
-require 'test_helper'
-
-module Workarea
-  if Plugin.installed?(:api)
-    module Api
-      module Storefront
-        class BalanceIntegrationTest < Workarea::IntegrationTest
-          def test_balance_lookup
-            # ...
-          end
-        end
-      end
-    end
-  end
-end
-```
-
-The following examples from Address Verification wrap test definitions in two other types of conditionals. The first, Workarea::TestCase.running_in_gem? is true only when the test case is run from the engine's embedded "dummy" app. This allows defining tests that are useful to the plugin maintainers but may be problematic to include in the test suites of applications that install the plugin.
-
-The other, Workarea.const_defined? tests the environment for the presence of a particular constant before defining tests. Address Verification supports multiple address verification gateways (and therefore provides tests for multiple gateways), but only one gateway will be installed in a production app. The conditional ensures tests for only the installed gateway are run.
-
-```
-# workarea-address_verification-2.0.2/test/lib/workarea/address_verification/ups_gateway_test.rb
-
-require 'test_helper'
-
-if Workarea::TestCase.running_in_gem? ||
-   Workarea.const_defined?('AddressVerification::UpsGateway')
-
-  require 'workarea/address_verification/ups_gateway'
-
-  module Workarea
-    module AddressVerification
-      class UpsGatewayTest < TestCase
-        def test_verify
-          # ...
-        end
-      end
-    end
-  end
-end
-```
-
-```
-# workarea-address_verification-2.0.2/test/lib/workarea/address_verification/melissa_data_gateway_test.rb
-
-require 'test_helper'
-
-if Workarea::TestCase.running_in_gem? ||
-   Workarea.const_defined?('AddressVerification::MelissaDataGateway')
-
-  require 'workarea/address_verification/melissa_data_gateway'
-
-  module Workarea
-    module AddressVerification
-      class MelissaDataGatewayTest < TestCase
-        def test_verify
-          # ...
-        end
-      end
-    end
-  end
-end
-```
 
 ### Change Configuration within a Test
 

@@ -6,22 +6,21 @@ excerpt: TODO
 
 # Configure Headless Chrome
 
-System tests (see below) are driven by a headless instance of Chrome, which, since Workarea 3.5.0, is configurable as follows:
+Workarea system tests are run within a headless instance of Chrome, driven by Selenium.
+Since Workarea 3.5.0, you can customize this setup using the following [configuration](/articles/configuration.html) values:
+
+| Config | Description |
+| --- | --- |
+| [`headless_chrome_options`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/core/lib/workarea/configuration.rb#L953) | Options hash passed to the Selenium driver |
+| [`headless_chrome_args`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/core/lib/workarea/configuration.rb#L956-L962) | Array of command line arguments passed to the Chrome executable |
+
+Replace or mutate the default values from within your own initializer:
 
 ```
-# <workarea-core>/lib/workarea/configuration.rb
+# <your_application_root>/config/initializers/headless_chrome.rb 
 
-# Options passed to the Selenium driver's capabilities
-config.headless_chrome_options = { w3c: false }
-
-# Arguments passed to headless Chrome for running system tests
-config.headless_chrome_args = [
-  'headless',
-  'disable-gpu',
-  'disable-popup-blocking',
-  '--enable-features=NetworkService,NetworkServiceInProcess',
-  "--window-size=#{config.capybara_browser_width},#{config.capybara_browser_width}"
-]
+Workarea.configure do |config|
+  config.headless_chrome_options = {...}
+  config.headless_chrome_args = [...]
+end
 ```
-
-Modify these configurations as needed from an initializer in your app or plugin.
