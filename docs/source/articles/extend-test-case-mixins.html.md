@@ -6,6 +6,11 @@ excerpt: TODO
 
 # Extend Test Case Mixins
 
+[Testing Concepts, Test Case Mixins](/articles/testing-concepts.html#test-case-mixins)
+
+* [Change an Existing Test Case Mixin](#change-an-existing-test-case-mixin)
+* [Add a New Test Case Mixin](#add-a-new-test-case-mixin)
+
 
 ## Change an Existing Test Case Mixin
 

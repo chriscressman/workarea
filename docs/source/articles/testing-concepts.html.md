@@ -6,8 +6,20 @@ excerpt: TODO
 
 # Testing Concepts
 
+* [Tests & Decorators](#tests-amp-decorators)
+* [Test Runners](#test-runners)
+* [Test Helper](#test-helper)
+* [Test Case Types](#test-case-types)
+* [Test Case Mixins](#test-case-mixins)
+* [Test Factories](#test-factories)
+* [Headless Chrome](#headless-chrome)
+
 
 ## Tests & Decorators
+
+[Run Tests](/articles/run-tests.html)
+
+[Decorate & Write Tests](/articles/decorate-and-write-tests.html)
 
 When to write a new test (an application test) vs decorating an existing test (a workarea test).
 Prefer writing new tests.
@@ -27,23 +39,36 @@ Workarea (platform) tests vs application tests.
 
 Application tests vs decorators.
 
-Link to doc that covers decorating and writing tests.
-[Decorate & Write Tests](/articles/decorate-and-write-tests.html)
-
 
 ## Test Runners
+
+[Run Tests](/articles/run-tests.html)
 
 [Rails Test Runner](https://guides.rubyonrails.org/testing.html#the-rails-test-runner)
 
 Rails test runner vs Workarea test runners.
 
-Link to doc that covers running tests.
-[Run Tests](/articles/run-tests.html)
-
 With workarea test runner, when tests fail, the output includes a command line to re-run each failed test (with the Rails test runner).
 
 
-## Test Case Types & Mixins
+## Test Helper
+
+[Decorate & Write Tests](/articles/decorate-and-write-tests.html)
+
+Every test case file begins by requiring your application test helper, test/test_helper.rb. This file sets up the environment for testing, as follows:
+
+1. Boots your application in the test Rails environment
+2. Loads Rails' test help, railties/lib/rails/test_help.rb, which bootstraps Rails testing
+3. Loads Workarea's test help, workarea-testing/lib/workarea/test_help.rb, which bootstraps Workarea testing
+
+The Workarea test help file loads a large Ruby API into memory, including the Workarea test cases from which your own test cases inherit. However, it also includes many other modules that provide additional setup/teardown and instance methods to use within your tests. Many of the platform's test cases mix in these modules as needed, and they are available to mix into your own test cases as well.
+
+
+## Test Case Types
+
+[Decorate & Write Tests](/articles/decorate-and-write-tests.html)
+
+REFERENCE DOCS
 
 All Workarea test cases inherit from one of the test case types below. The test case types generally differ in the size and scope of the Ruby API available within the test case, and the amount and type of setup and teardown that's done before/after each test in the test case.
 
@@ -147,27 +172,20 @@ The following modules provide additional instance methods that are useful in cer
         resize_window_to
 
 
-## Test Help
+## Test Case Mixins
 
-Every test case file begins by requiring your application test helper, test/test_helper.rb. This file sets up the environment for testing, as follows:
+[Decorate & Write Tests](/articles/decorate-and-write-tests.html)
 
-1. Boots your application in the test Rails environment
-2. Loads Rails' test help, railties/lib/rails/test_help.rb, which bootstraps Rails testing
-3. Loads Workarea's test help, workarea-testing/lib/workarea/test_help.rb, which bootstraps Workarea testing
+[Extend Test Case Mixins](/articles/extend-test-case-mixins.html)
 
-The Workarea test help file loads a large Ruby API into memory, including the Workarea test cases from which your own test cases inherit. However, it also includes many other modules that provide additional setup/teardown and instance methods to use within your tests. Many of the platform's test cases mix in these modules as needed, and they are available to mix into your own test cases as well.
+REFERENCE DOCS
 
 
-## Headless Chrome
+## Test Factories
 
-Link to doc that covers its configuration.
-[Configure Headless Chrome](/articles/configure-headless-chrome.html)
+[Configure & Add Test Factories](/articles/configure-and-add-test-factories.html)
 
-
-## Factories
-
-Link to docs that cover configuration and adding new ones.
-[Add or Change Test Factories & Support](/articles/add-or-change-test-factories-and-support.html)
+REFERENCE DOCS
 
 Factories are specialized test helpers that provide shortcuts for creating model instances. A factory method, such as create_product, can generally be called without arguments and creates a model instance using default data appropriate for testing.
 
@@ -184,3 +202,9 @@ Including factories in a test case adds the following instance methods.
 
     complete_checkout
     ...
+
+
+## Headless Chrome
+
+Link to doc that covers its configuration.
+[Configure Headless Chrome](/articles/configure-headless-chrome.html)
