@@ -6,20 +6,12 @@ excerpt: TODO
 
 # Decorate & Write Tests
 
-From your application, you can decorate the tests that ship with Workarea,
-and you can write your own application tests.
-See [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-amp-decorators)
-for more info, including an explanation of when to decorate vs when to write your own.
+From your application, you can decorate the tests that ship with Workarea, and you can write your own application tests.
+See [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-amp-decorators) for more info, including an explanation of when to decorate vs when to write your own.
 
-This doc explains how to
-[Decorate a Workarea Test Case](#decorate-a-workarea-test-case)
-including the special case
-[Skip a Workarea Test](#skip-a-workarea-test)
+This doc explains how to [Decorate a Workarea Test Case](#decorate-a-workarea-test-case), including the special case [Skip a Workarea Test](#skip-a-workarea-test).
 
-And also how to
-[Write an Application Test Case](#write-an-application-test-case)
-
-When doing so, the following recipes may also be useful:
+This doc also covers how to [Write an Application Test Case](#write-an-application-test-case), and when doing so, the following recipes may also be useful:
 
 * [Change Configuration within a Test](#change-configuration-within-a-test)
 * [Change Locale within a Test](#change-locale-within-a-test)
@@ -28,40 +20,34 @@ When doing so, the following recipes may also be useful:
 
 ## Decorate a Workarea Test Case
 
-[Decorate](/articles/decoration.html) a test case just like any other ruby class, except the pathname of the decorator must match the pathname of the original file
-except for the file extension
+[Decorate](/articles/decoration.html) a [test case](/articles/testing-concepts.html#test-case-types-amp-mixins) just like any other Ruby class, except the pathname of the decorator must match the pathname of the original file (except for the file extension).
 
-[Testing Concepts, Test Case Types & Mixins](/articles/testing-concepts.html#test-case-types-amp-mixins)
-
-e.g., to decorate the class definition:
+For example, to decorate the class definition at:
 
 ```
 workarea-core/test/models/workarea/payment/credit_card_integration_test.rb
 ```
 
-create the decorator:
+Create the decorator file at:
 
 ```
-workarea-braintree/test/models/workarea/payment/credit_card_integration_test.decorator
+<app_or_plugin_root>/test/models/workarea/payment/credit_card_integration_test.decorator
 ```
 
-This is necessary for the decorator to be applied to the class when tests are run.
+This parity is necessary for the decorator to be applied to the class when tests are run.
 
 
 ### Skip a Workarea Test
 
 One reason to decorate a test case is to skip one or more tests.
-Makes sense to skip a test when your extensions make it irrelevant or not applicable.
-e.g. you remove the ability to manage addresses in workarea as part of an
-integration with a user management system
-or temporarily removed it until while working on a related feature
-that will affect it
-or skip because there is a platform bug and you're waiting for patch
+Your custom platform extensions may break some tests, and it may make more sense to skip those tests rather than get them passing.
 
-Skip all tests within a test case:
+For example, an address management integration may have moved the ability to manage addresses out of Workarea and into another system.
+The tests for managing addresses will therefore fail, but it doesn't make sense to fix them.
+Skip all tests within this test case instead:
 
 ```
-# <your_application>/test/system/workarea/storefront/addresses_system_test.decorator
+# <application_root>/test/system/workarea/storefront/addresses_system_test.decorator
 
 require 'test_helper'
 
@@ -72,10 +58,10 @@ module Workarea
 end
 ```
 
-Skip specific tests within a test case:
+Another example is to skip specific tests within a test case while waiting for another feature to be implemented or for a platform bug to be fixed:
 
 ```
-# <your_application>/test/system/workarea/storefront/addresses_system_test.decorator
+# <application_root>/test/system/workarea/storefront/addresses_system_test.decorator
 
 require 'test_helper'
 
@@ -89,7 +75,7 @@ end
 ```
 
 ```
-# <your_application>/test/models/workarea/payment/refund/credit_card_test.decorator
+# <application_root>/test/models/workarea/payment/refund/credit_card_test.decorator
 
 require 'test_helper'
 
@@ -105,29 +91,23 @@ end
 
 ## Write an Application Test Case
 
-Prefer new tests over decorators.
-When to decorate a test, see [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-amp-decorators)
+Although you sometimes need to decorate Workarea tests, it's more common to write your own (application) tests.
+( See [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-amp-decorators). )
 
-To create a test, create a new ruby file to represent the test case.
-Choose a pathname based on workarea conventions.
-Refer to workarea engines to see how tests are grouped.
-But always within `/test`.
+To create a test, create a new file to represent the test case.
+Choose a pathname within `<application_root>/test/` based on Workarea conventions.
+For examples, see:
 
-[`/test` directory for Workarea Core](https://github.com/workarea-commerce/workarea/tree/master/core/test)
+* [`/test/` directory for Workarea Core](https://github.com/workarea-commerce/workarea/tree/master/core/test)
+* [`/test/` directory for Workarea Storefront](https://github.com/workarea-commerce/workarea/tree/master/storefront/test)
 
-[`/test` directory for Workarea Storefront](https://github.com/workarea-commerce/workarea/tree/master/storefront/test)
+Within the test file, first require the [test helper](/articles/testing-concepts.html#test-helper), and then define your test case class, inheriting from a Workarea [test case type](/articles/testing-concepts.html#test-case-types).
+Mix in any additional [test case mixins](/articles/testing-concepts.html#test-case-mixins) you may need.
 
-require the test helper
-define a class
-inherit from the appropriate test case type
-mix in additional test support
-
-[Test Case Types & Mixins](/articles/testing-concepts.html#test-case-types-amp-mixins)
-
-Example. Ideally replace this with a better one:
+The following boilerplate may help:
 
 ```
-# test/workers/workarea/import_inventory_test.rb
+# <application_root>/test/workers/workarea/import_inventory_test.rb
 
 require 'test_helper'
 
@@ -165,7 +145,8 @@ module Workarea
 end
 ```
 
-Prior to Workarea 3.5.0, you must wrap configuration changes in Workarea.with_config to ensure they reset after the test. Here is the same example from above using Workarea.with_config:
+Prior to Workarea 3.5.0, you must wrap configuration changes in `Workarea.with_config` to ensure they reset after the test.
+Here is the same example from above using `Workarea.with_config`:
 
 ```
 module Workarea
@@ -191,7 +172,8 @@ end
 
 ### Change Locale within a Test
 
-It's also possible to change the locale for the duration of a test, using the I18n.with_locale method. This is the method used to change locale in Workarea::I18nServerMiddleware, but it's also useful within tests like so:
+It's also possible to change the locale for the duration of a test, using the `I18n.with_locale` method.
+This is the method used to change locale in `Workarea::I18nServerMiddleware`, but it's also useful within tests like so:
 
 ```
 module Workarea
@@ -213,9 +195,9 @@ end
 
 ### Change Time within a Test
 
-In previous versions of Workarea, the Timecop gem was used to simulate running code at different points in time. Since Workarea 3.0.0, ActiveSupport's Time Helpers methods (like travel_to) are used for changing the current time and date. Note that changes to the current time will not carry over to other tests, Time.current is reset to the actual current time of the machine after executing each test. Here's an example using travel_to within a unit test to see how data is presented over time:
-
-https://api.rubyonrails.org/v5.2/classes/ActiveSupport/Testing/TimeHelpers.html
+Since Workarea 3.0.0, use [ActiveSupport's time helper methods](https://api.rubyonrails.org/v5.2/classes/ActiveSupport/Testing/TimeHelpers.html) (e.g. `travel_to`) to change the time and date within tests.
+Note that changes to the current time will not carry over to other tests&mdash;`Time.current` is reset to the actual current time of the machine after executing each test.
+Here's an example using `travel_to` within a unit test to see how data is presented over time:
 
 ```
 module Workarea

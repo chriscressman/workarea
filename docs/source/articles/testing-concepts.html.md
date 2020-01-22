@@ -16,7 +16,7 @@ This document explains the following concepts related to testing with the Workar
 
 ## Tests & Decorators
 
-Workarea applications are Rails applications and therefore inherit the toolchain and patterns for [testing Rails applications](https://guides.rubyonrails.org/testing.html).
+Workarea applications are Rails applications and therefore inherit the toolchain and patterns for [testing Rails apps](https://guides.rubyonrails.org/testing.html).
 Refer to that document for Rails testing fundamentals, such as Minitest, test cases, and assertions.
 
 However, a new Workarea application includes a broad feature set by default and therefore includes _tests_ for those features.
@@ -33,7 +33,7 @@ New tests are easier to reason about and run.
 
 However, in some situtations decorating an existing test is necessary.
 __Decorate a Workarea test when your platform extensions have caused an existing test to fail__.
-In this case, decorate the test to make it pass again, or skip the test if your changes have caused it to become irrelevant.
+In this case, decorate the test to make it pass again or to skip the test if your changes have caused it to become irrelevant.
 ( See [Decorate & Write Tests](/articles/decorate-and-write-tests.html). )
 
 
@@ -49,7 +49,7 @@ Knowing which test runner to use with which arguments can be confusing, so refer
 
 Every Rails test file begins by requiring the application _test helper_, a file located at `<application_root>/test/test_helper.rb`.
 This file boots the application into an appropriate test environment and bootstraps it for testing.
-This includes loading Rails' test help, `railties/lib/rails/test_help.rb`, and Workarea's test help, `workarea-testing/lib/workarea/test_help.rb`.
+This includes loading Rails' test help, `<railties>/lib/rails/test_help.rb`, and Workarea's test help, `<workarea-testing>/lib/workarea/test_help.rb`.
 
 You'll see this file required in the boilerplate for [writing your own tests](/articles/decorate-and-write-tests.html).
 
@@ -63,13 +63,12 @@ Refer to the following table for brief descriptions, and click through to the so
 
 | Test Case Type | Description |
 | --- | --- |
-| [`Workarea::TestCase`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/test_case.rb) | Generic Provides test basics from Minitest and ActiveSupport |
-| [`Workarea::IntegrationTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/integration_test.rb) | Integration Tests how various parts of the platform and/or application are interacting. |
-| [`Workarea::SystemTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/system_test.rb) | System Uses a headless browser to interact with the application's UI the same way a user does.  See also [Headless Chrome](#headless-chrome) |
-| [`Workarea::ViewTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/view_test.rb) | View Tests Provides the necessary API to test view helpers.  includes all of Rails' view helpers. |
-| [`Workarea::GeneratorTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/generator_test.rb) | Generator Tests Provides an API suitable for testing the Rails generators included with Workarea. |
-| [`Workarea::MailerTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/mailer_test.rb) | Description |
-| [`Workarea::PerformanceTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/performance_test.rb) | Description |
+| [`Workarea::TestCase`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/test_case.rb) | Generic Workarea test case based on `ActiveSupport::TestCase` that supports test decorators and other Workarea extensions |
+| [`Workarea::IntegrationTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/integration_test.rb) | Workarea integration test case based on `ActionDispatch::IntegrationTest` that provides decorator support, Workarea extensions, and additional instance methods, such as `set_current_user` |
+| [`Workarea::SystemTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/system_test.rb) | Workarea system test case based on `ActionDispatch::SystemTestCase` that provides [Headless Chrome](#headless-chrome) setup and extensions to Capybara, such as `wait_for_xhr` |
+| [`Workarea::ViewTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/view_test.rb) | Workarea view test case based on `ActionView::TestCase` |
+| [`Workarea::MailerTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/mailer_test.rb) | Workarea mailer test case based on `ActionMailer::TestCase` |
+| [`Workarea::GeneratorTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/generator_test.rb) | Workarea generator test case based on `Rails::Generators::TestCase` |
 
 
 ## Test Case Mixins
@@ -85,13 +84,13 @@ You can also extend these mixins to change their behavior as needed for your app
 
 | Test Case Mixin | Description |
 | --- | --- |
-| [`Workarea::TestCase::Workers`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/test_case.rb#L38-L60) | Description |
-| [`Workarea::TestCase::SearchIndexing`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/test_case.rb#L62-L73) | Description |
-| [`Workarea::TestCase::Mail`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/test_case.rb#L62-L73) | Description |
-| [`Workarea::Admin::IntegrationTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/admin/integration_test.rb) | Description |
-| [`Workarea::Storefront::IntegrationTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/storefront/integration_test.rb) | Description |
-| [`Workarea::Storefront::SystemTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/storefront/system_test.rb) | Description |
-| [`Workarea::BreakpointHelpers`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/storefront/breakpoint_helpers.rb) | Description |
+| [`Workarea::TestCase::Workers`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/test_case.rb#L38-L60) | Provides setup and teardown to enable [workers](/articles/workers.html) to run (inline) |
+| [`Workarea::TestCase::SearchIndexing`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/test_case.rb#L62-L73) | Provides setup for use of Elasticsearch indexes |
+| [`Workarea::TestCase::Mail`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/test_case.rb#L75-L89) | Provides setup and teardown enabling sending of mail |
+| [`Workarea::Admin::IntegrationTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/admin/integration_test.rb) | Ensures a default Admin user |
+| [`Workarea::Storefront::IntegrationTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/storefront/integration_test.rb) | Provides test "macros" such as `complete_checkout` |
+| [`Workarea::Storefront::SystemTest`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/storefront/system_test.rb) | Provides test "macros" such as `add_product_to_cart` |
+| [`Workarea::BreakpointHelpers`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/storefront/breakpoint_helpers.rb) | Provides test "macros" such as `resize_window_to` |
 
 
 ## Test Factories
@@ -99,7 +98,7 @@ You can also extend these mixins to change their behavior as needed for your app
 _Test factories_ are modules whose methods provide shortcuts for creating model instances.
 Within your tests, you can call factory methods (e.g. `create_product`) to create model instances with default data appropriate for testing.
 
-View all Core factories at [`lib/workarea/testing/factories/`](https://github.com/workarea-commerce/workarea/tree/v3.5.3/testing/lib/workarea/testing/factories).
+View the Base factories in [`<workarea-testing>/lib/workarea/testing/factories/`](https://github.com/workarea-commerce/workarea/tree/v3.5.3/testing/lib/workarea/testing/factories).
 
 Many test case types include factories by default, and you can include factories in any test cases that don't by including [`Workarea::Factories`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/testing/factories.rb) within the test case definition.
 All other factories "register" themselves with this "master" module, so that only this module must be included to provide access to all factory methods.

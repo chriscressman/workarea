@@ -6,7 +6,9 @@ excerpt: TODO
 
 # Extend Test Case Mixins
 
-[Testing Concepts, Test Case Mixins](/articles/testing-concepts.html#test-case-mixins)
+Workarea provides several [test case mixins](/articles/testing-concepts.html#test-case-mixins), which you can extend.
+
+This document provides procedures for the following:
 
 * [Change an Existing Test Case Mixin](#change-an-existing-test-case-mixin)
 * [Add a New Test Case Mixin](#add-a-new-test-case-mixin)
@@ -14,19 +16,11 @@ excerpt: TODO
 
 ## Change an Existing Test Case Mixin
 
-e.g. want to change the email filled in by:
+You may want to change a method within an existing test case mixin so that the change is reflected in all tests (rather than decorating specific tests).
 
-[`Storefront::SystemTest#fill_in_email`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/storefront/system_test.rb#L90-L92)
+For example, say you want to change the email address filled in by [`Storefront::SystemTest#fill_in_email`](https://github.com/workarea-commerce/workarea/blob/v3.5.3/testing/lib/workarea/storefront/system_test.rb#L90-L92) from `bcrouse-new-account@workarea.com` to `robert-clams@workarea.com`.
 
-Change email from:
-
-bcrouse-new-account@workarea.com
-
-To:
-
-robert-clams@workarea.com
-
-Create a new file in /test/support/ and re-open the module and the method:
+Create a new file in `/test/support/` and re-open the previously defined module and method, applying the email address change:
 
 ```
 # <application_root>/test/support/storefront_system_test_extensions.rb
@@ -36,14 +30,14 @@ module Workarea
     module SystemTest
 
       def fill_in_email
-        fill_in 'email', match: :first, with: 'bcrouse-new-account@workarea.com'
+        fill_in 'email', match: :first, with: 'robert-clams@workarea.com'
       end
     end
   end
 end
 ```
 
-Require the new method from your test helper:
+Then, require the module definition from your test helper:
 
 ```
 # <application_root>/test/test_helper.rb
@@ -55,7 +49,13 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'support/storefront_system_test_extensions'
 ```
 
+Your changes will now be reflected in all test cases that use this method.
+
+
 ## Add a New Test Case Mixin
 
+To add a new test case mixin, e.g. to define your own test "macros", follow the steps above for changing a test case mixin.
+However, define a new module instead of re-opening an existing module.
+
+After requiring the module from your test helper, the new methods will be available to all test cases that include the module.
 Follow the steps for changing a test case mixin, but define a new module and methods instead of re-opening an existing module and methods.
-Now you can mix the module into new test cases and use the new methods.

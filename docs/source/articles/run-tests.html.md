@@ -7,12 +7,12 @@ excerpt: TODO
 # Run Tests
 
 The platform ships with its own tests (Workarea tests), which you can run from your application.
-When you run the platform tests, any decorators you've written for those tests are applied.
-And you can also write your own tests (application tests) that further extend the platform.
-See also [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-decorators)
+When you run Workarea tests, any decorators you've written for those tests are applied.
+You can also write your own tests (application tests) that further extend the platform.
+( See also [Testing Concepts, Tests & Decorators](/articles/testing-concepts.html#tests-decorators). )
 
-You run the tests using one of many test runners.
-See also [Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
+You run tests using one of many test runners.
+( See [Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners). )
 
 It can be confusing which to use for a given situation, so this document provides instructions to:
 
@@ -30,190 +30,167 @@ In those situations you may want to refer to:
 
 ## Run All Tests
 
-Uses a workarea test runner.
-[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
-Runs the workarea platform tests.
-With any decorators you've written applied.
-Any any new tests original to your application.
+Use the default Workarea test runner to run all tests: Workarea tests including your decorations of those tests, plus your own application tests.
 
 ```
 bin/rails workarea:test
 ```
 
-Under the hood, this uses the rails test runner.
-[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
-Passes paths of `/test/**/*_test.rb` within the installed
-Workarea Core and each installed plugin
-And rails root
-
-[Pass Arguments to Workarea Test Runners](#pass-arguments-to-workarea-test-runners)
+You can also run this command with arguments. See [Pass Arguments to Workarea Test Runners](#pass-arguments-to-workarea-test-runners).
 
 
 ## Run Workarea Tests
 
-Uses a workarea test runner.
-[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
-Run only Workarea platform tests.
-Any decorators for these tests are applied.
+Additional Workarea test runners allow you to run tests by engine or run all plugin tests.
 
-By engine:
+Run tests for a specific Workarea engine:
 
 ```
 bin/rails workarea:test:<engine>
 ```
 
-e.g.:
+For example:
 
 ```
 bin/rails workarea:test:core
+```
+
+```
 bin/rails workarea:test:storefront
+```
+
+```
 bin/rails workarea:test:gift_cards
 ```
 
-the special case `plugins` runs all engines
-except core, admin, storefront
+Alternatively, run tests for all installed Workarea plugins (all engines except Core, Admin, Storefront):
 
 ```
 bin/rails workarea::test:plugins
 ```
 
-[Pass Arguments to Workarea Test Runners](#pass-arguments-to-workarea-test-runners)
+You can also run the above commands with arguments. See [Pass Arguments to Workarea Test Runners](#pass-arguments-to-workarea-test-runners).
 
 
 ### Run Specific Workarea Tests
 
-Uses the rails test runner.
-[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
-Use the Rails test runner to run individual/specific Workarea tests.
+To run individual/specific Workarea test cases and tests, use the Rails test runner.
+Pass the pathnames of the test files you'd like to run as arguments to the test runner.
+Use `bundle show` to easily find the installation location of each Workarea engine.
 
-Pass the pathnames of the workarea test files.
-Use `bundle show` to easily find the installation location of each workarea engine.
-
-Run `UserTest` test case from Core:
+For example, run the `UserTest` test case from Workarea Core:
 
 ```
 bin/rails test $(bundle show workarea-core)/test/models/workarea/user_test.rb
 ```
 
-Use any args supported by the rails test runner, e.g. `-n` to run specific tests within a test case:
+Use additional arguments to be more specific about which tests to run.
+For example, use `-n` to run specific tests within a test case:
 
 ```
 bin/rails test $(bundle show workarea-core)/test/models/workarea/user_test.rb -n test_new_example
 ```
 
-[Display Rails Test Runner Help](#display-rails-test-runner-help)
+To see all available arguments, see [Display Rails Test Runner Help](#display-rails-test-runner-help).
 
 
 ### Run Decorated Workarea Tests
 
-To run _all_ the tests, you've decorated from your application,
-use the following command.
-Uses a workarea test runner.
-[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
-finds the originals that correspond to your application decorators
-within core and installed plugins and runs them.
+You may want to run only the Workarea tests that you've decorated within your application.
+
+Run _all_ decorated tests:
 
 ```
 bin/rails workarea:test:decorated
 ```
-[Pass Arguments to Workarea Test Runners](#pass-arguments-to-workarea-test-runners)
 
-To run _specific_ tests you've decorated...
-Run specific decorated tests just like you would run any other single test.
-[Run Specific Workarea Tests](#run-specific-workarea-tests)
-Common mistake is to try to pass a decorator as an argument to the test runner.
-Have to find the path to the original test.
-pass pathnames ending in `.rb`, not `.decorator`
+( See also [Pass Arguments to Workarea Test Runners](#pass-arguments-to-workarea-test-runners). )
+
+Run _specific_ decorated tests using the general procedure for [running specific Workarea tests](#run-specific-workarea-tests).
+However, the pathnames you pass as arguments must be the original `*.rb` test files within the Workarea engine(s), not the `*.decorator` files within your application.
+You must locate the pathnames to the original test files and pass those to the test runner to run the tests.
 
 
 ## Run Application Tests
 
-Nothing Workarea-specific about this.
-Use the standard Rails test runner like you would in any other Rails app.
-[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
+Run your application tests like you would in any other Rails application (using the generic Rails test runner):
 
 ```
 bin/rails test
 ```
 
-The default Rails test runner doesn't run system tests, which trips people up.
+Be aware, the default Rails test runner doesn't run system tests. To run system tests, use:
 
 ```
 bin/rails test:system
 ```
 
-[Display Rails Test Runner Help](#display-rails-test-runner-help)
+To see all available arguments for these test runners, refer to [Display Rails Test Runner Help](#display-rails-test-runner-help).
 
 
 ### Run Specific Application Tests
 
-Again, nothing Workarea specific.
-Use the standard Rails test runner, and pass it pathnames as arguments.
-[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
+To run specific application tests, pass the pathnames of the test files as arguments to the Rails test runner:
 
 ```
 bin/rails test <paths>
 ```
 
-e.g.:
+For example:
 
 ```
 bin/rails test test/models/article_test.rb
 ```
 
-[Display Rails Test Runner Help](#display-rails-test-runner-help)
+Additional arguments are also available for more control over which tests are run and how they are run.
+See [Display Rails Test Runner Help](#display-rails-test-runner-help).
 
 
 ### Run `.decorator` Test Files
 
-It's a common mistake to try to run `.decorator` files using the Rails test runner.
-Remember that [decorators](https://developer.workarea.com/articles/decoration.html#decorators) are files that extend an existing class.
-So they aren't complete test classes.
-To run a decorated test, you have to pass the pathname of the original test case.
-Refer to [Run Decorated Workarea Tests](#run-decorated-workarea-tests)
+Developers often make the mistake of passing `*.decorator` file pathnames as test runner arguments.
+Because [decorators](https://developer.workarea.com/articles/decoration.html#decorators) are extensions of existing classes, they are not complete test cases on their own and therefore can't be run as tests.
+You must instead locate the pathnames of the original `*.rb` test files and pass those pathnames as arguments.
+
+See [Run Decorated Workarea Tests](#run-decorated-workarea-tests).
 
 
 ## List Test Runners
 
-Once you are familiar with the commands from the sections above, you may simply need a refesher of which
-test runners exist.
-List all available test runners, including rails and workarea.
-[Testing Concepts, Test Runners](/articles/testing-concepts.html#test-runners)
+Once you are familiar with the commands from the sections above, you may simply need a refesher of which test runners exist.
+
+List all available test runners (Rails and Workarea):
 
 ```
 bin/rails -T test
 ```
 
-Output will differ from app to app, depending on which plugins are installed and possibly other things.
+Output will differ from app to app, depending on which plugins are installed and other variables, so run this command within your application to see which test runners are available.
 
 
 ## Display Rails Test Runner Help
 
-To see all the arguments accepted by the Rails test runner, view its inline help.
+To see all the arguments accepted by the Rails test runner, view its inline help:
 
 ```
 bin/rails test --help
 ```
 
-e.g. `-b` to get a backtrace
-
-v is verbose
-s is seed
+The output lists all available arguments for the test runner, such as `-b` to print backtraces, `-v` for verbose output, and `-s` to run a specific seed.
 
 
 ## Pass Arguments to Workarea Test Runners
 
-Workarea test runners accept same options as Rails test runner
-[Display Rails Test Runner Help](#display-rails-test-runner-help)
-but using ENV var.
+Workarea test runners accept the same arguments as the Rails test runners, but you must pass the arguments using the `TESTOPTS` environment variable.
 
-Begin your command line with a variable definition containing the options.
+Refer to [Display Rails Test Runner Help](#display-rails-test-runner-help) for all available arguments.
+Pass arguments using the following boilerplate:
 
 ```
 TESTOPTS='<arguments>' bin/rails workarea:test:<runner>
 ```
 
-e.g., run all core tests with verbose output using a specific seed:
+For example, run all Core tests with verbose output using a specific seed:
 
 ```
 TESTOPTS='-v -s 51477' bin/rails workarea:test:core
